@@ -1,5 +1,6 @@
 mod data_models;
 mod routes;
+mod util;
 
 use axum::http::StatusCode;
 use axum::routing::get;

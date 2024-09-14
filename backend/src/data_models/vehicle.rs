@@ -1,8 +1,7 @@
-use super::{
-    fuel::{FuelType, GasolineType},
-    user::User,
-};
+use super::fuel::{FuelType, GasolineType};
+use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Vehicle {
     uuid: String,
     name: String,

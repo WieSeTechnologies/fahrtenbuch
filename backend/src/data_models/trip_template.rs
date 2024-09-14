@@ -1,7 +1,9 @@
+use serde::{Deserialize, Serialize};
 use super::route::Route;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TripTemplate {
-    from: String,
-    to: String,
-    route: Route,
+    pub from: String,
+    pub to: String,
+    pub route: Route,
 }

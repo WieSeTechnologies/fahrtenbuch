@@ -1,6 +1,9 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Session {
-    uuid: String,
+    pub uuid: String,
     // TODO: Change String to propper Datetime Variable
-    expiry: String,
-    owner_username: String,
+    pub expiry: String,
+    pub owner_username: String,
 }

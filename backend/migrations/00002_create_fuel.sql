@@ -1,7 +1,7 @@
 -- Enum for FuelType
-CREATE TYPE fuel_type AS ENUM ('Gasoline', 'Diesel', 'Electric', 'Other');
+CREATE TYPE fuel_type AS ENUM ('gasoline', 'diesel', 'electric', 'other');
 -- Enum for GasolineType
-CREATE TYPE gasoline_type AS ENUM ('Super', 'SuperE10', 'SuperPlus');
+CREATE TYPE gasoline_type AS ENUM ('super', 'supere10', 'superplus');
 -- Fuel Prices Table
 CREATE TABLE fuel_prices (
     -- Auto-incremented primary key for fuel prices

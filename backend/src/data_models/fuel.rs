@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum FuelType {
     Gasoline,
     Diesel,
@@ -5,12 +8,14 @@ pub enum FuelType {
     Other,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum GasolineType {
     Super,
     SuperE10,
     SuperPlus,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FuelPrice {
     id: i32,
     price: f32,
