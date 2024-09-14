@@ -1,18 +1,18 @@
 pub enum FuelType {
-    Gasoline(GasolineType),
+    Gasoline,
     Diesel,
     Electric,
-    Other(String),
+    Other,
 }
 
 pub enum GasolineType {
     Super,
     SuperE10,
     SuperPlus,
-    Other(String),
 }
 
 pub struct FuelPrice {
+    id: i32,
     price: f32,
     // TODO: Change String to propper Datetime Variable
     date: String,
