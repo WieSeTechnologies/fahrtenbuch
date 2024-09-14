@@ -1,6 +1,7 @@
 mod data_models;
 mod routes;
 
+use axum::http::StatusCode;
 use axum::routing::get;
 use axum::Router;
 use axum::{response::Redirect, routing::post};
@@ -65,7 +66,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/api/setup/create_initial_user",
             post(routes::setup::create_initial_user::create_initial_user),
         )
-        .layer(cors);
+        .layer(cors)
+        .fallback(not_found_handler);
 
     info!("Server started successfully on 0.0.0.0:9000");
 
@@ -74,4 +76,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     axum::serve(listener, app).await?;
 
     Ok(())
+}
+
+async fn not_found_handler() -> (StatusCode, String) {
+    (
+        StatusCode::NOT_FOUND,
+        String::from("404 - Not found.\nThe content you requested was not found on the server."),
+    )
 }
