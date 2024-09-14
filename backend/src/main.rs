@@ -1,8 +1,9 @@
+mod data_models;
 mod routes;
 
-use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
+use axum::{response::Redirect, routing::post};
 use dotenvy::dotenv;
 use std::env;
 use std::sync::Arc;
@@ -45,7 +46,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Initialize DB connection pool
-    info!("THE DATABASE NEEDS TO BE RUNNING IN ORDER FOR THE BACKEND TO FUNCTION!");
     init_db().await?;
 
     // === Server setup ===
@@ -61,6 +61,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .route("/", get(Redirect::temporary(&redirect_url)))
         .route("/status", get(routes::status::status))
+        .route(
+            "/api/setup/create_initial_user",
+            post(routes::setup::create_initial_user::create_initial_user),
+        )
         .layer(cors);
 
     info!("Server started successfully on 0.0.0.0:9000");

@@ -1,26 +1,35 @@
 # Features
 
 - [ ] Benutzer
-  - [ ] Username
+  - [ ] Username (for login)
+  - [ ] Displayname
   - [ ] Passwort
-  - [ ] Passwort ändern
+    - [ ] Passwort ändern
+    - [ ] muss neues Passwort Setzen
   - [ ] Sessions
+    - [ ] Logout
     - [ ] Alle invalidieren
   - [ ] Fahrzeuge
     - [ ] Antriebsart (für Einheiten)
+    - [ ] Treibstoff
     - [ ] Verbrauch Normal (l / 100km | kWh / 100 km)
     - [ ] Verbrauch Autobahn (l / 100km | kWh / 100 km)
-    - [ ] Wartungskotenpauschale pro KM
-  - [ ] Schulden an andere Nutzer
+    - [ ] Wartungskotenpauschale pro 100 km
+  - [ ] Schulden an andere Nutzer (werden aus Trips und Zahlungen berechnet)
   - [ ] Zahlungen
     - [ ] Schuldner trägt versendetes Geld ein
     - [ ] Empfänger bestätigt Bezahlung
+  - [ ] Rolle
 - [ ] Preisregister
   - [ ] Treibstoffpreise
   - [ ] Strompreise
+  - [ ] Änderungsdatum & Historie (damit bei Anpassungen alte Rechnungen nicht verändert werden)
 - [ ] Fahrten
   - [ ] Fahrer
   - [ ] Mitfahrer
+    - [ ] Zahlend
+      - [ ] Strecke Gefahren (default: in Prozent)
+    - [ ] Kostenlos
   - [ ] Strecke
     - [ ] Presets
     - [ ] Custom
