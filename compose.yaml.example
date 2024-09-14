@@ -1,0 +1,46 @@
+networks:
+  backend:
+    external: false
+
+services:
+  frontend:
+    build:
+      context: ./frontend/
+      args:
+        SOCKET_URL: "http://localhost"
+        SOCKET_PORT: 9000
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - 3000:3000
+
+  backend:
+    restart: unless-stopped
+    build:
+      context: ./backend/
+      target: final
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      RUST_LOG: info
+      REDIRECT_URL: "https://counter.astrago.de"
+      DATABASE_URL: postgres://user:1234@postgres:5432/fehlersystem
+    networks:
+      - backend
+    ports:
+      - 9000:9000
+
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: fehlersystem

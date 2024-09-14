@@ -1,0 +1,40 @@
+# Features
+
+- [ ] Benutzer
+  - [ ] Username
+  - [ ] Passwort
+  - [ ] Passwort ändern
+  - [ ] Sessions
+    - [ ] Alle invalidieren
+  - [ ] Fahrzeuge
+    - [ ] Antriebsart (für Einheiten)
+    - [ ] Verbrauch Normal (l / 100km | kWh / 100 km)
+    - [ ] Verbrauch Autobahn (l / 100km | kWh / 100 km)
+    - [ ] Wartungskotenpauschale pro KM
+  - [ ] Schulden an andere Nutzer
+  - [ ] Zahlungen
+    - [ ] Schuldner trägt versendetes Geld ein
+    - [ ] Empfänger bestätigt Bezahlung
+- [ ] Preisregister
+  - [ ] Treibstoffpreise
+  - [ ] Strompreise
+- [ ] Fahrten
+  - [ ] Fahrer
+  - [ ] Mitfahrer
+  - [ ] Strecke
+    - [ ] Presets
+    - [ ] Custom
+- [ ] Admin Panel
+  - [ ] Benutzer
+    - [ ] Anlegen
+    - [ ] Löschen
+    - [ ] Passwort Setzen
+  - [ ] Logs älter als X-Tage löschen
+- [ ] Logs (Alles aufzeichnen)
+  - [ ] öffentliche Logs
+    - [ ] Angelegte Fahrten
+      - [ ] Strecke
+      - [ ] Fahrer
+      - [ ] Mitfahrer
+  - [ ] geheime Logs
+    - [ ] Geldsendungen
