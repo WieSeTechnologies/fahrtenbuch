@@ -1,23 +1,26 @@
 {
-  "name": "frontend",
+  "name": "nuxt-app",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.3",
-    "@astrojs/node": "^8.3.3",
-    "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.15.6",
-    "tailwindcss": "^3.4.11",
-    "typescript": "^5.6.2"
+    "@nuxt/icon": "^1.5.1",
+    "nuxt": "^3.13.0",
+    "vue": "latest",
+    "vue-router": "latest"
   },
+  "packageManager": "pnpm@8.10.5+sha1.4370a069f21873a0ad83c785b8048ed8caf6e6e9",
   "devDependencies": {
-    "daisyui": "^4.12.10"
+    "@tailwindcss/typography": "^0.5.15",
+    "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.10",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.11"
   }
 }

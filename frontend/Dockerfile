@@ -66,11 +66,11 @@ COPY package.json .
 # Copy the production dependencies from the deps stage and also
 # the built application from the build stage into the image.
 COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/.output ./.output
 
 
 # Expose the port that the application listens on.
-EXPOSE 4321
+EXPOSE 3000
 
 # Run the application.
-CMD node ./dist/server/entry.mjs
+CMD node .output/server/index.mjs
