@@ -1,4 +1,4 @@
-CREATE TYPE paying_passenger_payment_adjustment_type AS ENUM ('none', 'tip', 'roundupto');
+CREATE TYPE passenger_payment_adjustment_type AS ENUM ('none', 'tip', 'roundupto');
 CREATE TABLE passengers (
     id SERIAL PRIMARY KEY,
     trip_id INTEGER NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
