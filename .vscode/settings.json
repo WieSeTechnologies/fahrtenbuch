@@ -10,5 +10,7 @@
       "username": "user",
       "password": "1234"
     }
-  ]
+  ],
+  "dependi.rust.lockFileEnabled": true,
+  "dependi.npm.lockFileEnabled": true
 }
