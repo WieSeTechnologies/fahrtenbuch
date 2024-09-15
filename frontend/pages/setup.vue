@@ -16,12 +16,12 @@
 
       <div class="grid grid-cols-1 gap-3">
         <MyIconTextInput
-          placeholder="Benutzername"
-          icon="material-symbols:person"
+          placeholder="Anzeigename"
+          icon="material-symbols:id-card"
         />
 
         <MyIconTextInput
-          placeholder="Anzeigename"
+          placeholder="Benutzername"
           icon="material-symbols:person"
         />
 

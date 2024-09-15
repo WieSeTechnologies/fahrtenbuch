@@ -9,6 +9,7 @@ const props = defineProps({
     required: true,
   },
   password: {
+    type: Boolean,
     required: false,
   },
 });
