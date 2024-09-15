@@ -1,7 +1,8 @@
 use crate::data_models::user::User;
 use regex::Regex;
+use sqlx::postgres::PgQueryResult;
+use sqlx::PgPool;
 use sqlx::Row;
-use sqlx::{postgres::PgQueryResult, PgPool};
 use tracing::debug;
 
 // FIXME: Creation of roles does not work

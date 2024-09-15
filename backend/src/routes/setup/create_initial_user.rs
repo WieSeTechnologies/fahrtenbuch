@@ -2,14 +2,12 @@ use crate::data_models::user::CreateUser;
 use crate::data_models::user::User;
 use crate::data_models::user::UserRole;
 use crate::util::password;
-use crate::util::user::insert_user;
+use crate::util::user::count::fetch_user_count;
+use crate::util::user::insert::insert_user;
 use crate::DB;
 use axum::extract;
 use axum::http::StatusCode;
 use chrono::prelude::*;
-use sqlx::PgPool;
-use sqlx::Row;
-use tracing::debug;
 use tracing::error;
 
 /// Creates the initial admin User.
@@ -82,14 +80,4 @@ pub async fn create_initial_user(
         StatusCode::CREATED,
         String::from("Sucessfully created user."),
     )
-}
-
-async fn fetch_user_count(pool: &PgPool) -> Result<i64, sqlx::Error> {
-    let user_count = sqlx::query("SELECT count(*) FROM users")
-        .fetch_one(pool)
-        .await?;
-
-    debug!("User Count: {:?}", &user_count);
-
-    user_count.try_get("count")
 }
