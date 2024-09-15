@@ -1,8 +1,9 @@
 pub mod fuel;
+pub mod passenger;
 pub mod payment;
 pub mod session;
 pub mod trip;
+pub mod trip_route;
 pub mod trip_template;
 pub mod user;
 pub mod vehicle;
-pub mod route;

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[sqlx(type_name = "fuel_type", rename_all = "lowercase")]
 pub enum FuelType {
     Gasoline,
     Diesel,
@@ -8,17 +9,17 @@ pub enum FuelType {
     Other,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[sqlx(type_name = "gasoline_type", rename_all = "lowercase")]
 pub enum GasolineType {
     Super,
     SuperE10,
     SuperPlus,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
 pub struct FuelPrice {
     id: i32,
     price: f32,
-    // TODO: Change String to propper Datetime Variable
-    date: String,
+    date: chrono::DateTime<chrono::Utc>,
 }

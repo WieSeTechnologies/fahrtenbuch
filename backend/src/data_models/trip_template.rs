@@ -1,9 +1,10 @@
+use super::trip_route::TripRoute;
 use serde::{Deserialize, Serialize};
-use super::route::Route;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TripTemplate {
-    pub from: String,
-    pub to: String,
-    pub route: Route,
+    pub id: i32,
+    pub from_loc_name: String,
+    pub to_loc_name: String,
+    pub trip_route: TripRoute,
 }

@@ -1,0 +1,1 @@
+CREATE TYPE trip_route AS (distance FLOAT, distance_autobahn FLOAT);

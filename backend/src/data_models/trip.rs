@@ -1,32 +1,20 @@
-use super::{route::Route, trip_template::TripTemplate, user::User, vehicle::Vehicle};
+use super::trip_route::TripRoute;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[sqlx(type_name = "trip_type", rename_all = "lowercase")]
 pub enum TripType {
-    Template(TripTemplate),
-    Custom(Route),
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum PayingPassengerPaymentAdjustment {
-    None,
-    Tip(f32),
-    RoundUpTo(f32),
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PayingPassenger {
-    pub user: User,
-    pub payment_adjustment: PayingPassengerPaymentAdjustment,
-    pub distance_traveled_percent: f32,
+    Template,
+    Custom,
 }
 
 // Vehicle Owner must be in either paying_passengers or free_passengers. Do not make them pay by default!
 // It is assumed that the vehicle is driven by its owner, who is therefore a passenger of some kind.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Trip {
+    pub id: i32,
     pub trip_type: TripType,
-    pub vehicle: Vehicle,
-    pub paying_passengers: Vec<PayingPassenger>,
-    pub free_passengers: Vec<User>,
+    pub trip_template: Option<String>,
+    pub trip_route: TripRoute,
+    pub vehicle: uuid::Uuid,
 }
