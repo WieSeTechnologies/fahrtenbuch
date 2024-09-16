@@ -1,11 +1,38 @@
 <script setup>
-const display_name = ref("");
+const displayname = ref("");
 const username = ref("");
 const password = ref("");
 
-function create_account() {
-  console.log(display_name.value, username.value, password.value);
+const api_url = useRuntimeConfig().public.api_url;
+
+async function create_account() {
+  console.log(displayname.value, username.value, password.value);
+  if (displayname.value !== "" && username.value !== "" && password.value !== "") {
+    const body = { username: username.value, displayname: displayname.value, password: password.value };
+
+    const url = `${api_url}/api/setup/create_initial_user`;
+    const options = {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body)
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.text();
+      console.log(data);
+      if (!response.ok || !response) {
+        alert(`Fehler beim Erstellen des Accounts: ${data}`);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(`Fehler beim Erstellen des Accounts: ${error}`);
+    }
+  } else {
+    alert("Bitte füllen Sie alle Eingabefelder aus.")
+  }
 }
+
 </script>
 
 <template>
@@ -22,16 +49,16 @@ function create_account() {
 
       <h2>Admin-Account einrichten</h2>
 
-      <div class="grid grid-cols-1 gap-3">
-        <MyIconTextInput placeholder="Anzeigename" icon="material-symbols:id-card" v-model="display_name" />
+      <form class="grid grid-cols-1 gap-3" @submit.prevent="create_account">
+        <MyIconTextInput placeholder="Anzeigename" icon="material-symbols:id-card" v-model="displayname" />
 
         <MyIconTextInput placeholder="Benutzername" icon="material-symbols:person" v-model="username" />
 
         <MyIconTextInput :password="true" placeholder="Passwort" icon="material-symbols:key" v-model="password" />
 
-        <MyIconButton icon="material-symbols:check-rounded" @click="create_account">Administrator-Account erstellen
+        <MyIconButton icon="material-symbols:check-rounded">Administrator-Account erstellen
         </MyIconButton>
-      </div>
+      </form>
     </main>
   </div>
 </template>
