@@ -11,14 +11,19 @@ const props = defineProps({
   password: {
     type: Boolean,
     required: false,
+    default: false,
   },
 });
-const { icon, placeholder } = props;
+const { icon, placeholder, password } = props;
 </script>
 
 <template>
   <label class="input input-bordered flex items-center gap-2">
     <Icon :name="icon" class="h-4 w-4 opacity-70" />
-    <input type="text" class="grow" :placeholder="placeholder" />
+    <input
+      :type="password ? 'password' : 'text'"
+      class="grow"
+      :placeholder="placeholder"
+    />
   </label>
 </template>
