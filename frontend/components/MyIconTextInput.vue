@@ -20,10 +20,7 @@ const { icon, placeholder, password } = props;
 <template>
   <label class="input input-bordered flex items-center gap-2">
     <Icon :name="icon" class="h-4 w-4 opacity-70" />
-    <input
-      :type="password ? 'password' : 'text'"
-      class="grow"
-      :placeholder="placeholder"
-    />
+    <input :type="password ? 'password' : 'text'" class="grow" :placeholder="placeholder"
+      @input="$emit('update:modelValue', $event.target.value)" />
   </label>
 </template>
