@@ -25,7 +25,11 @@
           icon="material-symbols:person"
         />
 
-        <MyIconTextInput placeholder="Passwort" icon="material-symbols:key" />
+        <MyIconTextInput
+          :password="true"
+          placeholder="Passwort"
+          icon="material-symbols:key"
+        />
 
         <MyIconButton icon="material-symbols:check-rounded"
           >Administrator-Account erstellen</MyIconButton
