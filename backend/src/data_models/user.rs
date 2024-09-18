@@ -17,7 +17,7 @@ pub struct User {
     pub password_hash: String,
     pub new_password_required: bool,
     pub role: UserRole,
-    pub creation_date: chrono::DateTime<chrono::Utc>,
+    pub creation_date: chrono::DateTime<chrono::Local>,
 }
 
 impl TryFrom<PgRow> for User {
