@@ -1,3 +1,4 @@
 pub mod setup;
-pub mod status;
 pub mod stats;
+pub mod status;
+pub mod user;

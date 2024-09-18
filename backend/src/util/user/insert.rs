@@ -5,7 +5,6 @@ use sqlx::PgPool;
 use sqlx::Row;
 use tracing::debug;
 
-// FIXME: Creation of roles does not work
 pub async fn insert_user(
     user: &User,
     pool: &PgPool,
