@@ -5,6 +5,7 @@ use argon2::Argon2;
 use argon2::PasswordHash;
 use argon2::PasswordVerifier;
 use chrono::Duration;
+use chrono::Local;
 use chrono::Utc;
 use regex::Regex;
 use sqlx::PgPool;
@@ -51,14 +52,14 @@ pub async fn login(
     // Create A new Session
     let session = Session {
         uuid: Uuid::new_v4(),
-        expiry: (Utc::now() + Duration::days(30)).to_utc(),
+        expiry: Local::now() + Duration::days(30),
         owner_username: user.username,
     };
 
     // Insert the session into the database
     let session_insert_query =
         sqlx::query("INSERT INTO sessions (uuid, expiry, owner_username) VALUES ($1, $2, $3)")
-            .bind(&session.owner_username)
+            .bind(&session.uuid)
             .bind(&session.expiry)
             .bind(&session.owner_username)
             .execute(pool)

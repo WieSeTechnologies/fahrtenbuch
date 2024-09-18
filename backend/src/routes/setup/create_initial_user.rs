@@ -64,7 +64,7 @@ pub async fn create_initial_user(
         displayname: payload.displayname,
         password_hash: hashed_password,
         new_password_required: false,
-        creation_date: Utc::now(),
+        creation_date: Local::now(),
         role: UserRole::Admin,
     };
 

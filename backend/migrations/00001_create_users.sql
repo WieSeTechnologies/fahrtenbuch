@@ -4,6 +4,6 @@ CREATE TABLE users (
     displayname VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     new_password_required BOOLEAN DEFAULT FALSE,
-    creation_date TIMESTAMP NOT NULL,
+    creation_date TIMESTAMPTZ NOT NULL,
     role user_role NOT NULL DEFAULT 'normal'
 );
