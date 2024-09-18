@@ -6,7 +6,6 @@ use argon2::PasswordHash;
 use argon2::PasswordVerifier;
 use chrono::Duration;
 use chrono::Local;
-use chrono::Utc;
 use regex::Regex;
 use sqlx::PgPool;
 use tracing::debug;
@@ -36,8 +35,13 @@ pub async fn login(
     let user: User = User::try_from(user_query)?;
 
     // Verify the provided password with the one in the table
-    // FIXME: Unwrap should not be used!!!
-    let password_hash = PasswordHash::new(&user.password_hash).unwrap();
+    // TODO: Cast the Error into Anyhow?
+    let password_hash = match PasswordHash::new(&user.password_hash).unwrap() {
+        Ok(hash) => hash,
+        Err(e) => {
+            return Err("Error whilst getting the password hash.".into());
+        }
+    };
     let password_check = Argon2::default()
         .verify_password(login_user.password.as_bytes(), &password_hash)
         .is_ok();

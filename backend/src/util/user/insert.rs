@@ -10,7 +10,7 @@ pub async fn insert_user(
     pool: &PgPool,
 ) -> Result<PgQueryResult, Box<dyn std::error::Error>> {
     // Check if the username is valid
-    let re = Regex::new(r"^[A-Za-z0-9_-]+$").unwrap();
+    let re = Regex::new(r"^[a-z0-9_-]+$").unwrap();
     if !re.is_match(&user.username) {
         return Err("Username contains invalid characters.".into());
     }

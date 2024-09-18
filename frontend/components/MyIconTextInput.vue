@@ -1,3 +1,4 @@
+<!-- TODO: Textfeld reagiert noch nicht auf Änderungen von außerhalb. Reaktivität muss wiederhergestellt werden. Gibt es eine bessere Methode als Events? -->
 <script setup>
 const props = defineProps({
   icon: {

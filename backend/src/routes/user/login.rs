@@ -1,14 +1,19 @@
 use crate::data_models::user::LoginUser;
+use crate::routes::ApiResponse;
 use crate::util::user::count::fetch_user_count;
 use crate::util::user::login::login;
 use crate::DB;
 use axum::extract;
 use axum::http::StatusCode;
+use axum::Json;
+use serde::{Deserialize, Serialize};
 use tracing::error;
 
 /// Creates the initial admin User.
 /// This function only runs if there are 0 registered users.
-pub async fn get_session(extract::Json(payload): extract::Json<LoginUser>) -> (StatusCode, String) {
+pub async fn get_session(
+    extract::Json(payload): extract::Json<LoginUser>,
+) -> (StatusCode, Json<ApiResponse<LoginResponse>>) {
     // Get the Database Pool
     let pool = match DB.get() {
         Some(pool) => pool,
@@ -16,7 +21,11 @@ pub async fn get_session(extract::Json(payload): extract::Json<LoginUser>) -> (S
             error!("Could not get database connection.");
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Could not get database connection."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Could not get database connection.")),
+                    data: None,
+                }),
             );
         }
     };
@@ -28,7 +37,11 @@ pub async fn get_session(extract::Json(payload): extract::Json<LoginUser>) -> (S
             error!("Could not get user count: {:?}", e);
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Could not get user count."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Could not get user count.")),
+                    data: None,
+                }),
             );
         }
     };
@@ -37,19 +50,45 @@ pub async fn get_session(extract::Json(payload): extract::Json<LoginUser>) -> (S
         error!("There are no registered users.");
         return (
             StatusCode::FORBIDDEN,
-            String::from("There are no registered users."),
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("There are no registered users.")),
+                data: None,
+            }),
         );
     }
 
     // Try to login user
     match login(&payload, &pool).await {
-        Ok(session) => return (StatusCode::OK, String::from(session.uuid)),
+        Ok(session) => {
+            return (
+                StatusCode::OK,
+                Json(ApiResponse {
+                    is_error: false,
+                    error_msg: None,
+                    data: Some({
+                        LoginResponse {
+                            session_id: session.uuid.to_string(),
+                        }
+                    }),
+                }),
+            )
+        }
         Err(e) => {
             error!("Login Error: {:?}", e);
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Something went wrong."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Something went wrong.")),
+                    data: None,
+                }),
             );
         }
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginResponse {
+    pub session_id: String,
 }
