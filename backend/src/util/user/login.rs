@@ -11,13 +11,14 @@ use sqlx::PgPool;
 use tracing::debug;
 use uuid::Uuid;
 
+use super::check_username::check_username;
+
 pub async fn login(
     login_user: &LoginUser,
     pool: &PgPool,
 ) -> Result<Session, Box<dyn std::error::Error>> {
-    // Check if the username is valid
-    let re = Regex::new(r"^[A-Za-z0-9_-]+$").unwrap();
-    if !re.is_match(&login_user.username) {
+    // Check if Username is valid
+    if !check_username(&login_user.username) {
         return Err("Username contains invalid characters.".into());
     }
 
@@ -32,13 +33,13 @@ pub async fn login(
         .fetch_one(pool)
         .await?;
 
-    let user: User = User::try_from(user_query)?;
+    let user: User = User::try_from(&user_query)?;
 
     // Verify the provided password with the one in the table
     // TODO: Cast the Error into Anyhow?
-    let password_hash = match PasswordHash::new(&user.password_hash).unwrap() {
+    let password_hash = match PasswordHash::new(&user.password_hash) {
         Ok(hash) => hash,
-        Err(e) => {
+        Err(_) => {
             return Err("Error whilst getting the password hash.".into());
         }
     };

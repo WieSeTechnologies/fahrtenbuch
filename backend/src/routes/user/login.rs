@@ -3,16 +3,15 @@ use crate::routes::ApiResponse;
 use crate::util::user::count::fetch_user_count;
 use crate::util::user::login::login;
 use crate::DB;
-use axum::extract;
+use axum::extract::Json;
 use axum::http::StatusCode;
-use axum::Json;
 use serde::{Deserialize, Serialize};
 use tracing::error;
 
 /// Creates the initial admin User.
 /// This function only runs if there are 0 registered users.
 pub async fn get_session(
-    extract::Json(payload): extract::Json<LoginUser>,
+    Json(payload): Json<LoginUser>,
 ) -> (StatusCode, Json<ApiResponse<LoginResponse>>) {
     // Get the Database Pool
     let pool = match DB.get() {

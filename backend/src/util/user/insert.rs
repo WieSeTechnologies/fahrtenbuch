@@ -1,4 +1,5 @@
 use crate::data_models::user::User;
+use crate::util::user::check_username::check_username;
 use regex::Regex;
 use sqlx::postgres::PgQueryResult;
 use sqlx::PgPool;
@@ -10,8 +11,7 @@ pub async fn insert_user(
     pool: &PgPool,
 ) -> Result<PgQueryResult, Box<dyn std::error::Error>> {
     // Check if the username is valid
-    let re = Regex::new(r"^[a-z0-9_-]+$").unwrap();
-    if !re.is_match(&user.username) {
+    if !check_username(&user.username) {
         return Err("Username contains invalid characters.".into());
     }
 

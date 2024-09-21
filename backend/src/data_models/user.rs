@@ -20,10 +20,10 @@ pub struct User {
     pub creation_date: chrono::DateTime<chrono::Local>,
 }
 
-impl TryFrom<PgRow> for User {
+impl TryFrom<&PgRow> for User {
     type Error = sqlx::Error;
 
-    fn try_from(row: PgRow) -> Result<Self, Self::Error> {
+    fn try_from(row: &PgRow) -> Result<Self, Self::Error> {
         let user = User {
             username: row.try_get("username")?,
             displayname: row.try_get("displayname")?,
