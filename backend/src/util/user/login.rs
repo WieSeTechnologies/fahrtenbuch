@@ -6,7 +6,6 @@ use argon2::PasswordHash;
 use argon2::PasswordVerifier;
 use chrono::Duration;
 use chrono::Local;
-use regex::Regex;
 use sqlx::PgPool;
 use tracing::debug;
 use uuid::Uuid;

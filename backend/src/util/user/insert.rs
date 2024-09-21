@@ -1,6 +1,5 @@
 use crate::data_models::user::User;
 use crate::util::user::check_username::check_username;
-use regex::Regex;
 use sqlx::postgres::PgQueryResult;
 use sqlx::PgPool;
 use sqlx::Row;
