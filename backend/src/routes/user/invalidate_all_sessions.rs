@@ -1,11 +1,11 @@
-use crate::{
-    data_models::session::SessionInput, routes::ApiResponse,
-    util::user::verify_session::verify_session, DB,
-};
-use axum::{extract::Json, http::StatusCode};
-use tracing::error;
+use crate::data_models::session::SessionInput;
+use crate::DB;
+use crate::{routes::ApiResponse, util::user::invalidate_all_sessions::invalidate_all_sessions};
+use axum::{http::StatusCode, Json};
+#[allow(unused_imports)]
+use tracing::{debug, error, info, trace, warn};
 
-pub async fn post_verify_session(
+pub async fn post_invalidate_all_sessions(
     Json(payload): Json<SessionInput>,
 ) -> (StatusCode, Json<ApiResponse<bool>>) {
     let pool = match DB.get() {
@@ -23,16 +23,14 @@ pub async fn post_verify_session(
         }
     };
 
-    let verify_result = verify_session(&payload, pool).await;
-
-    match verify_result {
-        Ok(result) => {
+    match invalidate_all_sessions(&payload, pool).await {
+        Ok(_) => {
             return (
                 StatusCode::OK,
                 Json(ApiResponse {
                     is_error: false,
                     error_msg: None,
-                    data: Some(result),
+                    data: Some(true),
                 }),
             );
         }
@@ -41,10 +39,13 @@ pub async fn post_verify_session(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(ApiResponse {
                     is_error: true,
-                    error_msg: Some(format!("An error occurred: {:?}", e)),
+                    error_msg: Some(format!(
+                        "An Error occurred during the invalidation: {:?}",
+                        e
+                    )),
                     data: None,
                 }),
             );
         }
-    }
+    };
 }

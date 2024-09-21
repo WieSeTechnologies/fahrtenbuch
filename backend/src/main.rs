@@ -76,6 +76,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/api/user/verify_session",
             post(routes::user::verify_session::post_verify_session),
         )
+        .route(
+            "/api/user/invalidate_all_sessions",
+            post(routes::user::invalidate_all_sessions::post_invalidate_all_sessions),
+        )
         .layer(cors)
         .fallback(not_found_handler);
 
