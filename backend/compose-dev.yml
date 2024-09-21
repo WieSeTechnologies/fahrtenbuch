@@ -5,7 +5,6 @@ networks:
 services:
   postgres:
     image: postgres
-    restart: unless-stopped
     # set shared memory limit when using docker-compose
     # shm_size: 128mb
     networks:
@@ -14,15 +13,29 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: fahrtenbuch
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=de-DE"
     ports:
       - 5432:5432
 
   adminer:
     image: adminer
-    restart: unless-stopped
     ports:
       - 8080:8080
     environment:
       ADMINER_DEFAULT_SERVER: postgres
     networks:
       - backend
+
+  # pgadmin4:
+  #   image: elestio/pgadmin:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "user@example.com"
+  #     PGADMIN_DEFAULT_PASSWORD: "1234"
+  #     PGADMIN_LISTEN_PORT: 8080
+  #   ports:
+  #     - 8081:8080
+  #   # volumes:
+  #     # - ./servers-dev.json:/pgadmin4/servers.json
+  #   networks:
+  #     - backend

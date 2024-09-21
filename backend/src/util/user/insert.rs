@@ -1,18 +1,16 @@
 use crate::data_models::user::User;
-use regex::Regex;
+use crate::util::user::check_username::check_username;
 use sqlx::postgres::PgQueryResult;
 use sqlx::PgPool;
 use sqlx::Row;
 use tracing::debug;
 
-// FIXME: Creation of roles does not work
 pub async fn insert_user(
     user: &User,
     pool: &PgPool,
 ) -> Result<PgQueryResult, Box<dyn std::error::Error>> {
     // Check if the username is valid
-    let re = Regex::new(r"^[A-Za-z0-9_-]+$").unwrap();
-    if !re.is_match(&user.username) {
+    if !check_username(&user.username) {
         return Err("Username contains invalid characters.".into());
     }
 

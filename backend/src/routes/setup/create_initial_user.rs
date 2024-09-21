@@ -1,12 +1,14 @@
 use crate::data_models::user::CreateUser;
 use crate::data_models::user::User;
 use crate::data_models::user::UserRole;
+use crate::routes::ApiResponse;
 use crate::util::password;
 use crate::util::user::count::fetch_user_count;
 use crate::util::user::insert::insert_user;
 use crate::DB;
 use axum::extract;
 use axum::http::StatusCode;
+use axum::Json;
 use chrono::prelude::*;
 use tracing::error;
 
@@ -14,7 +16,7 @@ use tracing::error;
 /// This function only runs if there are 0 registered users.
 pub async fn create_initial_user(
     extract::Json(payload): extract::Json<CreateUser>,
-) -> (StatusCode, String) {
+) -> (StatusCode, Json<ApiResponse<String>>) {
     // Get the Database Pool
     let pool = match DB.get() {
         Some(pool) => pool,
@@ -22,7 +24,11 @@ pub async fn create_initial_user(
             error!("Could not get database connection.");
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Could not get database connection."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Could not get database connection.")),
+                    data: None,
+                }),
             );
         }
     };
@@ -34,7 +40,11 @@ pub async fn create_initial_user(
             error!("Could not get user count: {:?}", e);
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Could not get user count."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Could not get user count.")),
+                    data: None,
+                }),
             );
         }
     };
@@ -42,7 +52,11 @@ pub async fn create_initial_user(
         error!("There are already registered users.");
         return (
             StatusCode::FORBIDDEN,
-            String::from("There are already registered users."),
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("There are already registered users.")),
+                data: None,
+            }),
         );
     }
 
@@ -53,7 +67,11 @@ pub async fn create_initial_user(
             error!("Could not hash password: {:?}", e);
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Could not hash password."),
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(String::from("Could not hash password.")),
+                    data: None,
+                }),
             );
         }
     };
@@ -64,7 +82,7 @@ pub async fn create_initial_user(
         displayname: payload.displayname,
         password_hash: hashed_password,
         new_password_required: false,
-        creation_date: Utc::now(),
+        creation_date: Local::now(),
         role: UserRole::Admin,
     };
 
@@ -72,12 +90,20 @@ pub async fn create_initial_user(
         error!("Could not create user: {:?}", e);
         return (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not create user: {:?}", e),
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(format!("Could not create user: {:?}", e)),
+                data: None,
+            }),
         );
     };
 
     (
         StatusCode::CREATED,
-        String::from("Sucessfully created user."),
+        Json(ApiResponse {
+            is_error: false,
+            error_msg: None,
+            data: Some(String::from("Sucessfully created user.")),
+        }),
     )
 }

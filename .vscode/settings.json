@@ -12,5 +12,6 @@
     }
   ],
   "dependi.rust.lockFileEnabled": true,
-  "dependi.npm.lockFileEnabled": true
+  "dependi.npm.lockFileEnabled": true,
+  "rust-analyzer.checkOnSave": false
 }

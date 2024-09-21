@@ -67,9 +67,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/api/setup/create_initial_user",
             post(routes::setup::create_initial_user::create_initial_user),
         )
+        .route("/api/user/login", post(routes::user::login::get_session))
         .route(
             "/api/stats/user_count",
             get(routes::stats::user_count::get_user_count),
+        )
+        .route(
+            "/api/user/verify_session",
+            post(routes::user::verify_session::post_verify_session),
+        )
+        .route(
+            "/api/user/invalidate_all_sessions",
+            post(routes::user::invalidate_all_sessions::post_invalidate_all_sessions),
         )
         .layer(cors)
         .fallback(not_found_handler);
