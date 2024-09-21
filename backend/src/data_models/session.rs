@@ -30,3 +30,9 @@ pub struct VerifySession {
     pub session_id: uuid::Uuid,
     pub username: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InvalidateAllSessions {
+    pub session_id: uuid::Uuid,
+    pub username: String,
+}

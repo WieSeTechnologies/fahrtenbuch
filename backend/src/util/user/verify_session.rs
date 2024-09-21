@@ -1,5 +1,6 @@
 use super::check_username::check_username;
 use crate::data_models::session::{Session, VerifySession};
+use chrono::{DateTime, Local};
 use sqlx::PgPool;
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
@@ -26,18 +27,25 @@ pub async fn verify_session(
         return Ok(false);
     }
 
-    let r = match query_result.first() {
+    let row = match query_result.first() {
         Some(result) => result,
-
         None => {
+            error!("There are no results.");
             return Err("There are no results.".into());
         }
     };
 
-    let session: Session = Session::try_from(r)?;
+    let session: Session = Session::try_from(row)?;
+
+    // Check if the session is still valid
+    if session.expiry < Local::now() {
+        info!("Session is no longer valid.");
+        return Ok(false);
+    }
 
     // Check if the usernames match
     if verify_session.username != session.owner_username {
+        info!("Usernames do not match.");
         return Ok(false);
     }
 
