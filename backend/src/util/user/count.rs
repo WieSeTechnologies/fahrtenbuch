@@ -2,6 +2,7 @@ use sqlx::PgPool;
 use sqlx::Row;
 use tracing::debug;
 
+/// Fetches the count of users from the Database
 pub async fn fetch_user_count(pool: &PgPool) -> Result<i64, sqlx::Error> {
     let user_count = sqlx::query("SELECT count(*) FROM users")
         .fetch_one(pool)

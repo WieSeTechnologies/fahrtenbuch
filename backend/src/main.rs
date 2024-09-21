@@ -80,6 +80,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/api/user/invalidate_all_sessions",
             post(routes::user::invalidate_all_sessions::post_invalidate_all_sessions),
         )
+        .route(
+            "/api/user/invalidate_session",
+            post(routes::user::invalidate_session::post_invalidate_session),
+        )
         .layer(cors)
         .fallback(not_found_handler);
 

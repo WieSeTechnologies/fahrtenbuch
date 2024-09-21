@@ -4,8 +4,8 @@ use sqlx::PgPool;
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
 
-/// Invalidates all active sessions a user has
-pub async fn invalidate_all_sessions(
+/// Invalidates the session that calles the functions
+pub async fn invalidate_session(
     session_input: &SessionInput,
     pool: &PgPool,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -22,8 +22,9 @@ pub async fn invalidate_all_sessions(
     }
 
     // Invalidate the sessions
-    sqlx::query("DELETE FROM sessions WHERE owner_username = $1")
+    sqlx::query("DELETE FROM sessions WHERE owner_username = $1 AND uuid = $2")
         .bind(&session_input.username)
+        .bind(&session_input.session_id)
         .execute(pool)
         .await?;
 

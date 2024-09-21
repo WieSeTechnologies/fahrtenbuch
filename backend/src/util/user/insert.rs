@@ -5,6 +5,7 @@ use sqlx::PgPool;
 use sqlx::Row;
 use tracing::debug;
 
+/// Inserts a new user into the users table
 pub async fn insert_user(
     user: &User,
     pool: &PgPool,

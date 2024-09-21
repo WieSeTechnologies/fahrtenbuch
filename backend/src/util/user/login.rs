@@ -12,6 +12,7 @@ use uuid::Uuid;
 
 use super::check_username::check_username;
 
+/// Creates a new session for the provided user
 pub async fn login(
     login_user: &LoginUser,
     pool: &PgPool,

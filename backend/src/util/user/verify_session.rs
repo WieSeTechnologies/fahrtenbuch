@@ -5,6 +5,7 @@ use sqlx::PgPool;
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
 
+/// Verifies a session
 pub async fn verify_session(
     session_input: &SessionInput,
     pool: &PgPool,
