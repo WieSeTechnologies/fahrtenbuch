@@ -69,7 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .route(
             "/api/user/get_session",
-            post(routes::user::get_session::get_session),
+            post(routes::user::get_session::post_get_session),
         )
         .route(
             "/api/stats/user_count",

@@ -1,6 +1,6 @@
 use crate::routes::ApiResponse;
 use crate::util::user::count::fetch_user_count;
-use crate::util::user::login::login;
+use crate::util::user::get_session::get_session;
 use crate::DB;
 use crate::{data_models::user::LoginUser, util::user::check_username::check_username};
 use axum::extract::Json;
@@ -10,9 +10,9 @@ use tracing::error;
 
 /// Creates the initial admin User.
 /// This function only runs if there are 0 registered users.
-pub async fn get_session(
+pub async fn post_get_session(
     Json(payload): Json<LoginUser>,
-) -> (StatusCode, Json<ApiResponse<LoginResponse>>) {
+) -> (StatusCode, Json<ApiResponse<GetSessionResponse>>) {
     // Get the Database Pool
     let pool = match DB.get() {
         Some(pool) => pool,
@@ -71,7 +71,7 @@ pub async fn get_session(
     }
 
     // Try to login user
-    match login(&payload, &pool).await {
+    match get_session(&payload, &pool).await {
         Ok(session) => {
             return (
                 StatusCode::OK,
@@ -79,7 +79,8 @@ pub async fn get_session(
                     is_error: false,
                     error_msg: None,
                     data: Some({
-                        LoginResponse {
+                        GetSessionResponse {
+                            username: session.owner_username,
                             session_id: session.uuid.to_string(),
                         }
                     }),
@@ -101,6 +102,7 @@ pub async fn get_session(
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct LoginResponse {
+pub struct GetSessionResponse {
+    pub username: String,
     pub session_id: String,
 }
