@@ -67,7 +67,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/api/setup/create_initial_user",
             post(routes::setup::create_initial_user::create_initial_user),
         )
-        .route("/api/user/login", post(routes::user::login::get_session))
+        .route(
+            "/api/user/get_session",
+            post(routes::user::get_session::get_session),
+        )
         .route(
             "/api/stats/user_count",
             get(routes::stats::user_count::get_user_count),

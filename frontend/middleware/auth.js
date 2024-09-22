@@ -1,34 +1,43 @@
 // Checks if a user was setup, if not, redirect to the setup page.
 export default defineNuxtRouteMiddleware(async (to, from) => {
-	const api_url = useRuntimeConfig().public.api_url;
+	// === Get the session form a cookie
 
-	// Request the user count
-	const url = `${api_url}/api/stats/user_count`;
+	// TODO: Get session from Cookie
+
+	const session = useCookie("session");
+
+	if (session.username === null || session.session_id === null) {
+	}
+
+	// === Verification with backend
+
+	// Request a new session
+	const api_url = useRuntimeConfig().public.api_url;
+	const url = `${api_url}/api/user/verify_session`;
 	const options = {
-		method: "GET",
+		method: "POST",
+		body: JSON.stringify({
+			username: "olaf",
+			session_id: "UUID",
+		}),
 	};
 	const request = await apiRequest(url, options);
 	// console.log(request);
 
-	// If there is an error during the request, do nothing.
-	if (request.is_error && request.data.is_error) {
-		return;
+	// If there is any error, redirect to the login page
+	if (
+		request.is_request_error ||
+		request.is_response_error ||
+		request.data.is_error
+	) {
+		console.error("Could not parse the reqest.");
+		return navigateTo("/user/login");
 	}
 
-	// If there are no registered users, redirect to the setup page.
-	// Otherwiese redirect the setup page to the main route
-	if (request.data.data.count <= 0) {
-		if (to.path !== "/setup") {
-			return navigateTo("/setup");
-		}
-	} else {
-		if (to.path === "/setup") {
-			if (from.path === "/setup") {
-				return navigateTo("/");
-				// biome-ignore lint/style/noUselessElse: <explanation>
-			} else {
-				return navigateTo(from.path);
-			}
-		}
+	// Redirect to login page if the session is invalid
+	// TODO: Delete the Cookie if it is invalid
+	if (request.data.data !== true) {
+		console.log("Session is invalid.");
+		return navigateTo("/user/login");
 	}
 });
