@@ -1,19 +1,19 @@
 <!-- TODO: Textfeld reagiert noch nicht auf Änderungen von außerhalb. Reaktivität muss wiederhergestellt werden. Gibt es eine bessere Methode als Events? -->
 <script setup>
 const props = defineProps({
-  icon: {
-    type: String,
-    required: true,
-  },
-  placeholder: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
+	icon: {
+		type: String,
+		required: true,
+	},
+	placeholder: {
+		type: String,
+		required: true,
+	},
+	password: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
 });
 const { icon, placeholder, password } = props;
 </script>

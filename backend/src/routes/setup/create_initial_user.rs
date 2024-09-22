@@ -3,6 +3,7 @@ use crate::data_models::user::User;
 use crate::data_models::user::UserRole;
 use crate::routes::ApiResponse;
 use crate::util::password;
+use crate::util::user::check_username::check_username;
 use crate::util::user::count::fetch_user_count;
 use crate::util::user::insert::insert_user;
 use crate::DB;
@@ -48,6 +49,7 @@ pub async fn create_initial_user(
             );
         }
     };
+
     if user_count > 0 {
         error!("There are already registered users.");
         return (
@@ -55,6 +57,19 @@ pub async fn create_initial_user(
             Json(ApiResponse {
                 is_error: true,
                 error_msg: Some(String::from("There are already registered users.")),
+                data: None,
+            }),
+        );
+    }
+
+    // Check if username is valid
+    let validity_check = check_username(&payload.username);
+    if !validity_check {
+        return (
+            StatusCode::CONFLICT,
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("The Username contains invalid characters.")),
                 data: None,
             }),
         );

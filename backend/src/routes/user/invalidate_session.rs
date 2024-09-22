@@ -1,4 +1,5 @@
 use crate::data_models::session::SessionInput;
+use crate::util::user::check_username::check_username;
 use crate::DB;
 use crate::{routes::ApiResponse, util::user::invalidate_session::invalidate_session};
 use axum::{http::StatusCode, Json};
@@ -22,6 +23,19 @@ pub async fn post_invalidate_session(
             );
         }
     };
+
+    // Check if username is valid
+    let validity_check = check_username(&payload.username);
+    if !validity_check {
+        return (
+            StatusCode::CONFLICT,
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("The Username contains invalid characters.")),
+                data: None,
+            }),
+        );
+    }
 
     match invalidate_session(&payload, pool).await {
         Ok(_) => {

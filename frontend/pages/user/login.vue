@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    layout: "form-page"
+	layout: "form-page",
 });
 
 const username = ref("");
@@ -9,24 +9,35 @@ const password = ref("");
 const api_url = useRuntimeConfig().public.api_url;
 
 async function login() {
-    if (username.value !== "" && password.value !== "") {
-        const body = { username: username.value, password: password.value };
+	if (username.value !== "" && password.value !== "") {
+		const body = { username: username.value, password: password.value };
 
-        const url = `${api_url}/api/user/login`;
-        const options = {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(body)
-        };
+		const url = `${api_url}/api/user/login`;
+		const options = {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(body),
+		};
 
-        const request = await apiRequest(url, options);
-        if (!request.is_error && !request.data.is_error && request.data.data != null) {
-            alert(`Sie wurden mit der Session-ID: ${request.data.data.session_id} angemeldet.`)
-        }
+		const request = await apiRequest(url, options);
+		console.log(request);
 
-    } else {
-        alert("Bitte füllen Sie alle Eingabefelder aus.")
-    }
+		// Error With the request (Client Side)
+		if (request.is_request_error) {
+			alert("An error occurred: request error");
+			return;
+		}
+
+		// Error with the Response (non 200 Response code or data says it is an error)
+		if (request.is_response_error || request.data.is_error) {
+			alert(`An error occurred: ${request.data.error_msg}`);
+			return;
+		}
+
+		// TODO: Implement Login logic
+	} else {
+		alert("Bitte füllen Sie alle Eingabefelder aus.");
+	}
 }
 </script>
 

@@ -1,9 +1,9 @@
 <script setup>
 const props = defineProps({
-  icon: {
-    type: String,
-    required: true,
-  },
+	icon: {
+		type: String,
+		required: true,
+	},
 });
 const { icon } = props;
 </script>

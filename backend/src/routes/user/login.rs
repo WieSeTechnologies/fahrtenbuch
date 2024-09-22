@@ -1,8 +1,8 @@
-use crate::data_models::user::LoginUser;
 use crate::routes::ApiResponse;
 use crate::util::user::count::fetch_user_count;
 use crate::util::user::login::login;
 use crate::DB;
+use crate::{data_models::user::LoginUser, util::user::check_username::check_username};
 use axum::extract::Json;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
@@ -45,13 +45,26 @@ pub async fn get_session(
         }
     };
 
-    if user_count == 0 {
+    if user_count <= 0 {
         error!("There are no registered users.");
         return (
             StatusCode::FORBIDDEN,
             Json(ApiResponse {
                 is_error: true,
                 error_msg: Some(String::from("There are no registered users.")),
+                data: None,
+            }),
+        );
+    }
+
+    // Check if username is valid
+    let validity_check = check_username(&payload.username);
+    if !validity_check {
+        return (
+            StatusCode::CONFLICT,
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("The Username contains invalid characters.")),
                 data: None,
             }),
         );

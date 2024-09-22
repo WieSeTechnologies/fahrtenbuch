@@ -1,8 +1,14 @@
-use axum::http::StatusCode;
+use axum::{http::StatusCode, Json};
 
-pub async fn status() -> (StatusCode, String) {
+use super::ApiResponse;
+
+pub async fn status() -> (StatusCode, Json<ApiResponse<String>>) {
     (
         StatusCode::OK,
-        String::from("The backend server is running."),
+        Json(ApiResponse {
+            is_error: false,
+            error_msg: None,
+            data: Some(String::from("The Backend Server is running.")),
+        }),
     )
 }

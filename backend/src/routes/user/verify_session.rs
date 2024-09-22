@@ -1,6 +1,8 @@
 use crate::{
-    data_models::session::SessionInput, routes::ApiResponse,
-    util::user::verify_session::verify_session, DB,
+    data_models::session::SessionInput,
+    routes::ApiResponse,
+    util::user::{check_username::check_username, verify_session::verify_session},
+    DB,
 };
 use axum::{extract::Json, http::StatusCode};
 use tracing::error;
@@ -22,6 +24,19 @@ pub async fn post_verify_session(
             );
         }
     };
+
+    // Check if username is valid
+    let validity_check = check_username(&payload.username);
+    if !validity_check {
+        return (
+            StatusCode::CONFLICT,
+            Json(ApiResponse {
+                is_error: true,
+                error_msg: Some(String::from("The Username contains invalid characters.")),
+                data: None,
+            }),
+        );
+    }
 
     let verify_result = verify_session(&payload, pool).await;
 

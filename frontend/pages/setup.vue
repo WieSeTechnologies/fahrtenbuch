@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  layout: "form-page"
+	layout: "form-page",
 });
 
 const displayname = ref("");
@@ -10,29 +10,50 @@ const password = ref("");
 const api_url = useRuntimeConfig().public.api_url;
 
 async function create_account() {
-  if (displayname.value !== "" && username.value !== "" && password.value !== "") {
-    const body = { username: username.value, displayname: displayname.value, password: password.value };
+	if (
+		displayname.value !== "" &&
+		username.value !== "" &&
+		password.value !== ""
+	) {
+		const body = {
+			username: username.value,
+			displayname: displayname.value,
+			password: password.value,
+		};
 
-    const url = `${api_url}/api/setup/create_initial_user`;
-    const options = {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body)
-    };
+		const url = `${api_url}/api/setup/create_initial_user`;
+		const options = {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(body),
+		};
 
-    const request = await apiRequest(url, options);
-    console.log(request)
-    if (!request.is_error && !request.data.is_error && request.data.data != null) {
-      alert(`Hallo ${displayname.value},\nIhr Benutzerkonto wurde erstellt: ${request.data.data}`)
-      return navigateTo("/");
-    }
+		const request = await apiRequest(url, options);
+		// console.log(request)
 
-    // Kontoerstellung erfolgreich
-  } else {
-    alert("Bitte füllen Sie alle Eingabefelder aus.")
-  }
+		// Error With the request (Client Side)
+		if (request.is_request_error) {
+			alert("An error occurred: request error");
+			return;
+		}
+
+		// Error with the Response (non 200 Response code, or data says it is an error)
+		if (request.is_response_error || request.data.is_error) {
+			alert(`An error occurred: ${request.data.error_msg}`);
+			return;
+		}
+
+		// Kontoerstellung erfolgreich
+		alert(
+			`Hallo ${displayname.value},\nIhr Benutzerkonto wurde erstellt: ${request.data.data}`,
+		);
+		return navigateTo("/");
+
+		// biome-ignore lint/style/noUselessElse: <explanation>
+	} else {
+		alert("Bitte füllen Sie alle Eingabefelder aus.");
+	}
 }
-
 </script>
 
 <template>
