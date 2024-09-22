@@ -8,11 +8,10 @@ const password = ref("");
 
 const api_url = useRuntimeConfig().public.api_url;
 
-async function login() {
+async function get_session() {
 	if (username.value !== "" && password.value !== "") {
+		const url = `${api_url}/api/user/get_session`;
 		const body = { username: username.value, password: password.value };
-
-		const url = `${api_url}/api/user/login`;
 		const options = {
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -34,7 +33,18 @@ async function login() {
 			return;
 		}
 
-		// TODO: Implement Login logic
+		const session_cookie = useCookie("session");
+		const session = {
+			username: request.data.data.username,
+			session_id: request.data.data.session_id,
+		};
+
+		session_cookie.value = session;
+
+		// TODO: Navigate the user to where he came from
+		return navigateTo("/");
+
+		// biome-ignore lint/style/noUselessElse: <explanation>
 	} else {
 		alert("Bitte füllen Sie alle Eingabefelder aus.");
 	}
@@ -47,7 +57,7 @@ async function login() {
 
     <p>Wenn Sie bereits ein Benutzerkonto besitzen, können Sie sich hier anmelden.</p>
 
-    <form class="grid grid-cols-1 gap-3" @submit.prevent="login">
+    <form class="grid grid-cols-1 gap-3" @submit.prevent="get_session">
         <MyIconTextInput placeholder="Benutzername" icon="material-symbols:person" v-model="username" />
 
         <MyIconTextInput :password="true" placeholder="Passwort" icon="material-symbols:key" v-model="password" />

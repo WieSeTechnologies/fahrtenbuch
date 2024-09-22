@@ -27,6 +27,6 @@ impl TryFrom<&PgRow> for Session {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SessionInput {
-    pub session_id: uuid::Uuid,
     pub username: String,
+    pub session_id: uuid::Uuid,
 }
