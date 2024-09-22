@@ -16,9 +16,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 			request.is_response_error ||
 			request.data.is_error
 		) {
-			// TODO: Return is goofy
 			console.error("Could not parse the reqest.");
-			return;
+			return navigateTo("/error");
 		}
 
 		const user_count = request.data.data.count;
@@ -31,9 +30,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		}
 		// At least one user
 		else {
-			// Is the user NOT on the login page?
+			// The user is not on the login page
 			if (to.path !== "/user/login") {
-				// Is the user logged in?
+				// Check login status
 				const session_cookie = useCookie("session");
 
 				// Broken Session Cookie
@@ -51,7 +50,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 				};
 				const valid_session = await verifySession(session);
 
-				// Cookie is correct, user does not want to login
+				// User is logged in and not on the login page
 				if (valid_session) {
 					// Disallow the setup route
 					if (to.path === "/setup") {
@@ -60,9 +59,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 						}
 						return navigateTo(from.path);
 					}
-
-					// User is logged, in; does not want to go to setup; There is a user
 				}
+
+				// User is logged in
 			}
 		}
 	}
