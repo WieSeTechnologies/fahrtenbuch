@@ -1,5 +1,5 @@
 <template>
-  <h1>Hello</h1>
-
-  <MyIconButton icon="material-symbols:person">Hi</MyIconButton>
+  <NuxtLink to="/example">Example</NuxtLink>
+  <br>
+  <NuxtLink to="/setup">Setup</NuxtLink>
 </template>

@@ -24,6 +24,7 @@ async function create_account() {
     console.log(request)
     if (!request.is_error && !request.data.is_error && request.data.data != null) {
       alert(`Hallo ${displayname.value},\nIhr Benutzerkonto wurde erstellt: ${request.data.data}`)
+      return navigateTo("/");
     }
 
     // Kontoerstellung erfolgreich
