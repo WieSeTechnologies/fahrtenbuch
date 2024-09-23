@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		const request = await apiRequest(url, options);
 		// console.log(request);
 
-		// If there is an error during the request, do nothing.
+		// If there is an error during the request, send the user to the login page.
 		if (
 			request.is_request_error ||
 			request.is_response_error ||
