@@ -36,7 +36,6 @@ pub async fn get_session(
     let user: User = User::try_from(&user_query)?;
 
     // Verify the provided password with the one in the table
-    // TODO: Cast the Error into Anyhow?
     let password_hash = match PasswordHash::new(&user.password_hash) {
         Ok(hash) => hash,
         Err(_) => {
