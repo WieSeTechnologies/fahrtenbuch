@@ -17,9 +17,21 @@ pub enum GasolineType {
     SuperPlus,
 }
 
-#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FuelPrice {
     id: i32,
     price: f32,
     date: chrono::DateTime<chrono::Utc>,
+    fuel_type: FuelType,
+    gasoline_type: Option<GasolineType>,
+}
+
+// ===== Utility Structs
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InsertFuelPrice {
+    price: f32,
+    date: chrono::DateTime<chrono::Utc>,
+    fuel_type: FuelType,
+    gasoline_type: Option<GasolineType>,
 }
