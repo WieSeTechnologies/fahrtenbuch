@@ -13,7 +13,7 @@ use uuid::Uuid;
 use super::check_username::check_username;
 
 /// Creates a new session for the provided user
-pub async fn get_session(
+pub async fn new_session(
     login_user: &LoginUser,
     pool: &PgPool,
 ) -> Result<Session, Box<dyn std::error::Error>> {

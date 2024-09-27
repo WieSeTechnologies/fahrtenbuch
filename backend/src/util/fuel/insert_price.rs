@@ -2,6 +2,7 @@ use crate::{
     data_models::fuel::InsertFuelPrice, routes::AuthenticatedRequest,
     util::user::verify_session::verify_session,
 };
+use chrono::Local;
 use sqlx::PgPool;
 
 pub async fn insert_fuel_price(
@@ -23,6 +24,8 @@ pub async fn insert_fuel_price(
     }
 
     // TODO: Finish this function by actually inserting stuff
+    let now = Local::now();
+
     todo!();
 
     Ok(())
