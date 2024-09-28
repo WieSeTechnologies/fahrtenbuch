@@ -61,6 +61,7 @@ impl TryFrom<&PgRow> for FuelPrice {
     type Error = Box<dyn std::error::Error>;
 
     fn try_from(value: &PgRow) -> Result<Self, Self::Error> {
+        // FIXME: Returns None on Error. This should be handled propperly!
         let gasoline_type: Option<GasolineType> = match value.try_get::<i32, &str>("gasoline_type")
         {
             Ok(index) => match GasolineType::try_from(index) {
