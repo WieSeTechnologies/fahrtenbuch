@@ -1,7 +1,9 @@
+pub mod fuel;
 pub mod setup;
 pub mod stats;
 pub mod status;
 pub mod user;
+
 use crate::data_models::session::SessionInput;
 use serde::{Deserialize, Serialize};
 

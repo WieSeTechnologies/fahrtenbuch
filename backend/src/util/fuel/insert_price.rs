@@ -1,30 +1,29 @@
-use crate::{
-    data_models::fuel::InsertFuelPrice, routes::AuthenticatedRequest,
-    util::user::verify_session::verify_session,
-};
+use crate::data_models::fuel::{FuelPrice, InsertFuelPrice};
 use chrono::Local;
 use sqlx::PgPool;
+#[allow(unused_imports)]
+use tracing::{debug, error, info, trace, warn};
 
 pub async fn insert_fuel_price(
-    payload: AuthenticatedRequest<InsertFuelPrice>,
+    payload: InsertFuelPrice,
     pool: &PgPool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let session = payload.session;
-    let data = payload.data;
-
-    // Check if session is valid. If not, throw an error.
-    let session_validity = match verify_session(&session, pool).await {
-        Ok(validity) => validity,
-        Err(_) => {
-            return Err("Could not check validity of session.".into());
-        }
-    };
-    if !session_validity {
-        return Err("Invalid Session.".into());
-    }
-
     // TODO: Finish this function by actually inserting stuff
     let now = Local::now();
+
+    let query_result = sqlx::query(
+                "INSERT INTO fuel_prices (price, date, fuel_type, gasoline_type) VALUES ($1, $2, $3, $4) RETURNING *",
+            )
+            .bind(payload.price)
+            .bind(now)
+            .bind(payload.fuel_type)
+            .bind(payload.gasoline_type)
+            .fetch_one(pool)
+            .await?;
+
+    let fuel_price: FuelPrice = FuelPrice::try_from(&query_result)?;
+
+    dbg!(&fuel_price);
 
     todo!();
 
