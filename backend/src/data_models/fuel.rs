@@ -61,22 +61,15 @@ impl TryFrom<&PgRow> for FuelPrice {
     type Error = Box<dyn std::error::Error>;
 
     fn try_from(value: &PgRow) -> Result<Self, Self::Error> {
-        // FIXME: Returns None on Error. This should be handled propperly!
-        let gasoline_type: Option<GasolineType> = match value.try_get::<i32, &str>("gasoline_type")
-        {
-            Ok(index) => match GasolineType::try_from(index) {
-                Ok(gasoline_type) => Some(gasoline_type),
-                Err(_) => None,
-            },
-            Err(_) => None,
-        };
-
         let fuel_price = FuelPrice {
             id: value.try_get("id")?,
             price: value.try_get("price")?,
             date: value.try_get("date")?,
             fuel_type: FuelType::try_from(value.try_get::<i32, &str>("fuel_type").unwrap())?,
-            gasoline_type: gasoline_type,
+            gasoline_type: value
+                .try_get::<Option<i32>, _>("gasoline_type")?
+                .map(GasolineType::try_from)
+                .transpose()?,
         };
 
         Ok(fuel_price)
