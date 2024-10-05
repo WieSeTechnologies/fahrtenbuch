@@ -54,16 +54,28 @@ pub async fn post_insert_fuel_price(
         );
     }
 
-    let data = payload.data;
+    let data: InsertFuelPrice = payload.data;
 
-    let _ = insert_fuel_price(data, pool).await;
-
-    (
-        StatusCode::NOT_IMPLEMENTED,
-        Json(ApiResponse {
-            is_error: false,
-            error_msg: None,
-            data: Some(false),
-        }),
-    )
+    match insert_fuel_price(data, pool).await {
+        Ok(data) => {
+            return (
+                StatusCode::OK,
+                Json(ApiResponse {
+                    is_error: false,
+                    error_msg: None,
+                    data: Some(true),
+                }),
+            );
+        }
+        Err(error) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ApiResponse {
+                    is_error: true,
+                    error_msg: Some(error.to_string()),
+                    data: None,
+                }),
+            );
+        }
+    }
 }

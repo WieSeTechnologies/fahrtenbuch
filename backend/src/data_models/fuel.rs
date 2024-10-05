@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::postgres::PgRow;
 use sqlx::Row;
 
-#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type, PartialEq)]
 // #[sqlx(type_name = "fuel_type", rename_all = "lowercase")]
 #[repr(i32)]
 pub enum FuelType {
@@ -26,7 +26,7 @@ impl TryFrom<i32> for FuelType {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type, PartialEq)]
 // #[sqlx(type_name = "gasoline_type", rename_all = "lowercase")]
 #[repr(i32)]
 pub enum GasolineType {
@@ -66,6 +66,7 @@ impl TryFrom<&PgRow> for FuelPrice {
             price: value.try_get("price")?,
             date: value.try_get("date")?,
             fuel_type: FuelType::try_from(value.try_get::<i32, &str>("fuel_type").unwrap())?,
+            // Explaination: https://chatgpt.com/share/66f9222e-be98-8000-8378-57cdb6ec51a8
             gasoline_type: value
                 .try_get::<Option<i32>, _>("gasoline_type")?
                 .map(GasolineType::try_from)
