@@ -1,6 +1,5 @@
-// TODO: Refactor this for better readibility
-// FIXME: A logged in user can open the login page
 // Checks if a user was setup, if not, redirect to the setup page.
+// If a user is not logged in, redirect him to the login page
 export default defineNuxtRouteMiddleware(async (to, from) => {
 	const origin = from.path;
 	const destination = to.path;
