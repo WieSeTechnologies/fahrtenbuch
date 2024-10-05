@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
     type_name = "passenger_payment_adjustment_type",
     rename_all = "lowercase"
 )]
+
 pub enum PassengerPaymentAdjustmentType {
-    None,
     Tip,
     RoundUpTo,
 }

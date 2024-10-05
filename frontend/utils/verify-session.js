@@ -1,6 +1,32 @@
 // TODO: Make this more informative regaeding errors (like api request)
-export default async function (session) {
-	// Request a new session
+export default async function () {
+	// Get the session cookie
+	let session_cookie;
+	try {
+		session_cookie = useCookie("session");
+	} catch (_) {
+		console.error("no session cookie");
+		return false;
+	}
+
+	// If the session cookie is broken, delete it and return false
+	if (
+		!session_cookie ||
+		!session_cookie.value ||
+		!session_cookie.value.username ||
+		!session_cookie.value.session_id
+	) {
+		session_cookie.value = null;
+		return false;
+	}
+
+	// Create the session object using the session data from the cookie
+	const session = {
+		username: session_cookie.value.username,
+		session_id: session_cookie.value.session_id,
+	};
+
+	// Verify the session with the backend
 	const api_url = useRuntimeConfig().public.api_url;
 	const url = `${api_url}/api/user/verify_session`;
 	const options = {
@@ -9,9 +35,7 @@ export default async function (session) {
 		body: JSON.stringify(session),
 	};
 	const request = await apiRequest(url, options);
-	// console.log(request);
-
-	// If there is any error, redirect to the login page
+	// If there is any error during the request return false
 	if (
 		request.is_request_error ||
 		request.is_response_error ||
@@ -21,10 +45,9 @@ export default async function (session) {
 		return false;
 	}
 
-	// Redirect to login page if the session is invalid
-	// TODO: Delete the Cookie if it is invalid
+	// Return false if the session is invalid
 	if (request.data.data !== true) {
-		console.log("Session is invalid.");
+		session_cookie.value = null;
 		return false;
 	}
 

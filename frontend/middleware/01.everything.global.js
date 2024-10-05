@@ -1,69 +1,71 @@
+// TODO: Refactor this for better readibility
+// FIXME: A logged in user can open the login page
 // Checks if a user was setup, if not, redirect to the setup page.
 export default defineNuxtRouteMiddleware(async (to, from) => {
-	if (to.path !== "/error") {
-		// Request the user count
-		const api_url = useRuntimeConfig().public.api_url;
-		const url = `${api_url}/api/stats/user_count`;
-		const options = {
-			method: "GET",
-		};
-		const request = await apiRequest(url, options);
-		// console.log(request);
+	const origin = from.path;
+	const destination = to.path;
+	const to_login = destination === "/user/login";
+	const to_setup = destination === "/setup";
+	const to_error = destination === "/error";
 
-		// If there is an error during the request, do nothing.
-		if (
-			request.is_request_error ||
-			request.is_response_error ||
-			request.data.is_error
-		) {
-			// TODO: Return is goofy
-			console.error("Could not parse the reqest.");
-			return;
+	// Don't do anything on error
+	if (to_error) {
+		return;
+	}
+
+	// Request the user count
+	const api_url = useRuntimeConfig().public.api_url;
+	const url = `${api_url}/api/stats/user_count`;
+	const options = {
+		method: "GET",
+	};
+	const request = await apiRequest(url, options);
+	// If there is an error during the request, send the user to the error page
+	if (
+		request.is_request_error ||
+		request.is_response_error ||
+		request.data.is_error
+	) {
+		console.error("Could not parse the user count reqest.");
+		return navigateTo("/error");
+	}
+	const user_count = request.data.data.count;
+
+	// If there are no registered Users, send the user to the register page
+	if (user_count <= 0) {
+		if (!to_setup) {
+			console.log("Sending user to setup page");
+			return navigateTo("/setup");
 		}
 
-		const user_count = request.data.data.count;
+		// Exit the function early if the user is going to the setup page, because session validity is not required.
+		return;
+	}
 
-		// Less than one User
-		if (user_count < 1) {
-			if (to.path !== "/setup") {
-				return navigateTo("/setup");
-			}
+	// if there is at least one registered user, forbid the setup page
+	if (user_count > 0 && to_setup) {
+		// Send the user back where he came from or to the main route if the origin cannot be resolved
+		if (origin === destination) {
+			return navigateTo("/");
 		}
-		// At least one user
-		else {
-			// Is the user NOT on the login page?
-			if (to.path !== "/user/login") {
-				// Is the user logged in?
-				const session_cookie = useCookie("session");
 
-				// Broken Session Cookie
-				if (
-					!session_cookie ||
-					!session_cookie.value ||
-					!session_cookie.value.username ||
-					!session_cookie.value.session_id
-				) {
-					return navigateTo("/user/login");
-				}
-				const session = {
-					username: session_cookie.value.username,
-					session_id: session_cookie.value.session_id,
-				};
-				const valid_session = await verifySession(session);
+		return navigateTo(origin);
+	}
 
-				// Cookie is correct, user does not want to login
-				if (valid_session) {
-					// Disallow the setup route
-					if (to.path === "/setup") {
-						if (from.path === to.path) {
-							return navigateTo("/");
-						}
-						return navigateTo(from.path);
-					}
+	// Check the validity of the session
+	const valid_session = await verifySession();
 
-					// User is logged, in; does not want to go to setup; There is a user
-				}
-			}
+	// if the user does not have a valid session, send him to the login page
+	if (!valid_session && !to_login) {
+		return navigateTo("/user/login");
+	}
+
+	// Disallow the login route for already logged in users
+	if (valid_session && to_login) {
+		if (origin === destination) {
+			return navigateTo("/");
 		}
+
+		return navigateTo(origin);
 	}
 });

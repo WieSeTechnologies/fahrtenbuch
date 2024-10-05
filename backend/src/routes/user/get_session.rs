@@ -1,6 +1,6 @@
 use crate::routes::ApiResponse;
 use crate::util::user::count::fetch_user_count;
-use crate::util::user::get_session::get_session;
+use crate::util::user::new_session::new_session;
 use crate::DB;
 use crate::{data_models::user::LoginUser, util::user::check_username::check_username};
 use axum::extract::Json;
@@ -71,7 +71,7 @@ pub async fn post_get_session(
     }
 
     // Try to login user
-    match get_session(&payload, &pool).await {
+    match new_session(&payload, &pool).await {
         Ok(session) => {
             return (
                 StatusCode::OK,
